@@ -7,7 +7,7 @@ import Navbar from "./Navbar";
 import About from "./About";
 import Users from "./Users";
 import Home from "./Home";
-import UserDetails from "./UserDetails";
+import UserDetails from "./Components/UserDetails/UserDetails";
 
 function App() {
   return (

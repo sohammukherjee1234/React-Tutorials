@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
+
+import {AddUser, RemoveUser} from "../../redux/actions";
 
 class UserDetails extends Component {
     constructor(props){
@@ -6,14 +9,21 @@ class UserDetails extends Component {
 
         this.state = {
             username: this.props.match.params.id,
-            data: {}
-
+            data: {},
+            isFriend: false
         };
         this.fetchData = this.fetchData.bind(this);
     }
 
     componentDidMount() {
         this.fetchData();
+        const friendFilter = this.props.friends.filter(name => (name === this.state.username));
+        if(friendFilter.length === 0){
+            this.setState({isFriend: false});
+        }
+        else{
+            this.setState({isFriend: true});
+        }
     }
 
     async fetchData(){
@@ -26,7 +36,22 @@ class UserDetails extends Component {
     }
 
     render() {
-        const {username, data} = this.state;
+        const {username, data, isFriend} = this.state;
+
+        const friendBtn = (friends) => {
+          if(friends){
+              return (
+                <button>
+                    Remove Friend
+                </button>
+              );
+          }
+          return (
+            <button>
+                Add Friend
+            </button>
+          );
+        };
         return (
             <div className="card-container">
                 <img src={data.avatar_url}
@@ -73,6 +98,8 @@ class UserDetails extends Component {
                         </span>
                     </div>
 
+                    {friendBtn(isFriend)}
+
                 </div>
 
             </div>
@@ -80,4 +107,17 @@ class UserDetails extends Component {
     }
 }
 
-export default UserDetails;
+const mapStateToProps = (state) => {
+    return {
+        friends: state.users
+    };
+};
+
+const mapDispatchToProps = () => {
+    return {
+        addFriend: AddUser,
+        removeFriend: RemoveUser
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserDetails);
