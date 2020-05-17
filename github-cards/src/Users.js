@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {Link} from "react-router-dom";
-
+import SmallCards from "./Components/SmallCards/SmallCards";
 
 class Users extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            usernames: []
+            userDetails: []
         };
         this.fetchData = this.fetchData.bind(this);
     }
@@ -18,21 +17,14 @@ class Users extends Component {
     async fetchData(){
         const resp = await fetch("https://api.github.com/orgs/github/public_members");
         const data = await resp.json();
-        const usernames = data.map(userDetails => userDetails.login);
-        this.setState({usernames: usernames});
+        this.setState({userDetails: data});
     }
 
     render() {
         return (
-           this.state.usernames.map(username => {
-               return (
-                   <Link to={`/users/${username}`}>
-                       <h1>
-                           {username}
-                       </h1>
-                   </Link>
-               );
-           })
+           <div className="wrapper">
+               {this.state.userDetails.map(user => <SmallCards name={user.login} avatar={user.avatar_url}/>)}
+           </div>
         );
     }
 }

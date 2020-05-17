@@ -16,7 +16,7 @@ export default function rootReducer(state=initialState, action){
             };
         case REMOVE_USER:
             userList = [...state.users];
-            const newList = userList.filter(user => (user !== action.payload));
+            const newList = userList.filter(user => (user.name !== action.payload));
             return {
                 ...state,
                 users: newList

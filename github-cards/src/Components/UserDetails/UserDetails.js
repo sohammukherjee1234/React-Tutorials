@@ -9,22 +9,15 @@ class UserDetails extends Component {
 
         this.state = {
             username: this.props.match.params.id,
-            data: {},
-            isFriend: false
+            data: {}
         };
         this.fetchData = this.fetchData.bind(this);
     }
 
     componentDidMount() {
         this.fetchData();
-        const friendFilter = this.props.friends.filter(name => (name === this.state.username));
-        if(friendFilter.length === 0){
-            this.setState({isFriend: false});
-        }
-        else{
-            this.setState({isFriend: true});
-        }
     }
+
 
     async fetchData(){
         const {username} = this.state;
@@ -36,18 +29,19 @@ class UserDetails extends Component {
     }
 
     render() {
-        const {username, data, isFriend} = this.state;
-
-        const friendBtn = (friends) => {
+        const {username, data} = this.state;
+        const users = this.props.friends;
+        const isFriend = (users.filter(user => user.name === username).length > 0);
+        const friendBtn = (friends, userData) => {
           if(friends){
               return (
-                <button>
+                <button className="remove-friend-btn" onClick={() => this.props.removeFriend(userData.name)}>
                     Remove Friend
                 </button>
               );
           }
           return (
-            <button>
+            <button className="add-friend-btn" onClick={() => this.props.addFriend(userData)}>
                 Add Friend
             </button>
           );
@@ -97,9 +91,12 @@ class UserDetails extends Component {
                             {data.following}
                         </span>
                     </div>
-
-                    {friendBtn(isFriend)}
-
+                    <div className="card-btn">
+                        <button onClick={() => console.log(data.html_url)} className="github-btn">
+                            Show Profile
+                        </button>
+                        {friendBtn(isFriend, {name: username, avatar: data.avatar_url})}
+                    </div>
                 </div>
 
             </div>
@@ -113,11 +110,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = () => {
-    return {
-        addFriend: AddUser,
-        removeFriend: RemoveUser
-    };
+const mapDispatchToProps = {
+    addFriend: AddUser,
+    removeFriend: RemoveUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserDetails);

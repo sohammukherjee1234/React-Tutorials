@@ -5,7 +5,9 @@ export default function Navbar() {
 
     return(
       <div className="navbar">
-          <span className="nav-brand">LOGO</span>
+          <span className="nav-brand">
+              GITHUB CARDS
+          </span>
           <ul className="nav-links">
               <Link to="/" className="nav-items">
                   <li> HOME </li>
